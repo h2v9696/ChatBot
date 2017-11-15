@@ -4,7 +4,8 @@
 #include <string.h>
 #include <time.h>
 #include <stdlib.h>
-#define max 256
+#include "DB_analyst.h"
+#define MAXLEN 256
 
 MYSQL *con;
 void finish_with_error()
@@ -17,7 +18,7 @@ void finish_with_error()
 // thay %s trong query bang xau s
 void change_query(char* query,char *s){
   int i;
-  char tmp[max];
+  char tmp[MAXLEN];
   for(i=0;i<strlen(query);i++)
     {
       if(query[i]=='%'&&query[i+1]=='s')
@@ -38,7 +39,7 @@ void config_DB()
       fprintf(stderr, "mysql_init() failed\n");
       exit(1);	
   }  
-  if (mysql_real_connect(con, "localhost", "root", "leanhtuan", 
+  if (mysql_real_connect(con, "localhost", "root", "vietvip96", 
           "BotChat", 0, NULL, 0) == NULL) 
     {
       finish_with_error(con);
@@ -48,7 +49,7 @@ void config_DB()
 char* get_reply(char *s)
 {
   //char *reply;
-  char S_query[max] = "SELECT R.Reply From Message AS M, Relationship AS Re, Reply AS R WHERE M.Mcode = Re.Mcode AND Re.Rcode = R.Rcode And M.Mess LIKE '%%s%'";
+  char S_query[MAXLEN] = "SELECT R.Reply From Message AS M, Relationship AS Re, Reply AS R WHERE M.Mcode = Re.Mcode AND Re.Rcode = R.Rcode And M.Mess LIKE '%%s%'";
   int r=0;
   change_query(S_query,s);
   if (mysql_query(con, S_query)) 
@@ -75,9 +76,3 @@ char* get_reply(char *s)
   mysql_close(con);
   exit(0);
 }
- 
- void main(){
-   config_DB();  
-   printf("%s\n",get_reply("Tuan"));
-   close_DB();
- }

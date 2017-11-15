@@ -41,16 +41,21 @@ int main(int argc, char **argv)
   while (fgets(sendline, MAXLINE, stdin) != NULL) {
     // Loai bo Enter
     sendline[strlen(sendline) - 1] = '\0';
-    send(sockfd, sendline, strlen(sendline) + 1, 0);
+    if (strstr(sendline, "/") == NULL) {
+      send(sockfd, sendline, strlen(sendline) + 1, 0);
 
-    if (recv(sockfd, recvline, MAXLINE,0) == 0){
-      perror("The server terminated prematurely"); 
-      exit(4);
+      if (recv(sockfd, recvline, MAXLINE,0) == 0){
+	perror("The server terminated prematurely"); 
+	exit(4);
+      }
+      // Thay cai nay bang ten con ChatBot
+      printf("%s", "Tao la ChatBot: ");
+      fputs(recvline, stdout);
+      printf("\n");
+    } else {
+      // Thong bao khong nhap dau slash
+      printf("Khong nhap duoc slash!");
     }
-    // Thay cai nay bang ten con ChatBot
-    printf("%s", "Tao la ChatBot: ");
-    fputs(recvline, stdout);
-    printf("\n");
 
   }
   
