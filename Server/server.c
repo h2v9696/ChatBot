@@ -5,10 +5,22 @@
 #include <netinet/in.h>
 #include <string.h>
 #include "DB_analyst.h"
+#include "header.h"
 
 #define MAXLINE 4096 // max text line length
 #define SERV_PORT 3000 // port
 #define LISTENQ 16 // maximum number of client connections
+
+char* header_process(char *s) {
+  char* header;
+  
+  strcpy(header, extract_header(s));
+  printf("%d\n", strcmp(header, "MESS"));
+  if (strcmp(header, "MESS") == 0) {
+    
+    return get_reply(s+strlen(header)+1);
+  } 
+}
 
 int main ()
 {
@@ -16,6 +28,7 @@ int main ()
   pid_t childpid;
   socklen_t clilen;
   char buff[MAXLINE];
+  char* tmp;
   struct sockaddr_in cliaddr, servaddr;
   
   //Create a socket for the soclet
@@ -52,11 +65,14 @@ exit(2);
       close (listenfd);
       while ((n = recv(connfd, buff, MAXLINE, 0)) > 0)  {
 	// Nhan buff tu client va gui answer o day
-	printf("%s","Tao la ChatBot: ");
-	//strcpy(buff, get_reply(buff));
-	//puts(buff);
-	puts(get_reply(buff));
-	send(connfd, get_reply(buff), MAXLINE, 0);
+	printf("%s","Xau tu Client: ");
+	printf("%s\n", buff);
+	//printf("%s\n", extract_header(buff));
+	//printf("%s\n", header_process(buff));
+	//Xu ly Header
+	//if (strcmp(extract_header(buff), "MESS") == 0) {
+	    send(connfd, get_reply(buff+strlen(extract_header(buff))+1), MAXLINE, 0);
+	    //}
       }
       
       if (n < 0)

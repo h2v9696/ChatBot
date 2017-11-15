@@ -4,6 +4,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <string.h>
+#include "../Server/header.h"
 
 #define MAXLINE 4096 /*max text line length*/
 #define SERV_PORT 3000 /*port*/
@@ -42,6 +43,8 @@ int main(int argc, char **argv)
     // Loai bo Enter
     sendline[strlen(sendline) - 1] = '\0';
     if (strstr(sendline, "/") == NULL) {
+      // Gui mess
+      strcpy (sendline, bind_header("MESS", sendline));
       send(sockfd, sendline, strlen(sendline) + 1, 0);
 
       if (recv(sockfd, recvline, MAXLINE,0) == 0){

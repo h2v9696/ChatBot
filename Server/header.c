@@ -2,15 +2,20 @@
 #include <string.h>
 #include "header.h"
 
-char* BlindHeader (char* header, char* line)
+char HEADERS[NUMBER_OF_HEADERS][25] = {
+    "CHOOSE",
+    "ADD"
+};
+
+char* bind_header(char* header, char* line)
 {
-    char blindedHeader[256];
+    char *bindedHeader;
     if(line != NULL)
     {
-        strcpy (blindedHeader, header);
-        strcat (blindedHeader, " ");
-        strcat (blindedHeader, line);
-        return blindedHeader;
+        strcpy (bindedHeader, header);
+        strcat (bindedHeader, " ");
+        strcat (bindedHeader, line);
+        return bindedHeader;
     }
     else
     {
@@ -18,18 +23,18 @@ char* BlindHeader (char* header, char* line)
     }
 }
 
-char* ExtractHeader(char* line)
+char* extract_header(char* line)
 {
-    int i=0;
-    char extractedHeader[25];
-    do{
+    int i = 0;
+    char *extractedHeader;
+    do {
         extractedHeader[i] = line[i];
         i++;
-    }while(line[i] != ' ' && i <= 25);
+    } while(line[i] != ' ' && i <= 25);
     return extractedHeader;
 }
 
-int CheckHeader(char* header)
+int check_header(char* header)
 {
     int i = 0;
     //check header with every existed headers
@@ -56,7 +61,7 @@ int CheckHeader(char* header)
     return 0;
 }
 
-int CheckCutPosition(char* line, char characterToCut )
+int check_cut_position(char* line, char characterToCut)
 {
     int i=0;
     int length = strlen(line);
@@ -67,7 +72,7 @@ int CheckCutPosition(char* line, char characterToCut )
     return -1;
 }
 
-void main ()
+/*void main ()
 {
     char line[256];
     char final[256];
@@ -75,7 +80,7 @@ void main ()
     int isHeader;
     int count;
     strcpy(line, "cat, dogs ");
-    strcpy(final, BlindHeader(HEADERS[0],line));
+    strcpy(final, bindHeader(HEADERS[0],line));
     strcpy(exHeader, ExtractHeader(final));
     isHeader = CheckHeader(exHeader);
     printf("%s\n",final);
@@ -88,4 +93,4 @@ void main ()
     {
         printf("This isnt an existed header\n");
     }
-}
+}*/
