@@ -36,8 +36,8 @@ CREATE TABLE `Message` (
 --
 
 INSERT INTO `Message` (`Mcode`, `Mess`) VALUES
-(1, 'Viet co bi ngu khong ?'),
-(2, 'Tuan dep trai khong ?');
+(1, 'Tuan co bi ngu khong ?'),
+(2, 'Chao');
 
 -- --------------------------------------------------------
 
@@ -74,8 +74,8 @@ CREATE TABLE `Reply` (
 --
 
 INSERT INTO `Reply` (`Rcode`, `Reply`) VALUES
-(1, 'Viet ngu vl :v'),
-(2, 'Tuan max dep trai');
+(1, 'Tuan ngu vl :v'),
+(2, 'Chao m');
 
 --
 -- Indexes for dumped tables

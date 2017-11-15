@@ -4,6 +4,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <string.h>
+#include "DB_analyst.h"
 
 #define MAXLINE 4096 // max text line length
 #define SERV_PORT 3000 // port
@@ -35,7 +36,7 @@ exit(2);
   //listen to the socket by creating a connection queue, then wait for clients
   listen (listenfd, LISTENQ);
 
-  // printf("%s\n","Server running...waiting for connections.");
+  printf("%s\n","Server running...waiting for connections.");
  
   for ( ; ; ) {
     clilen = sizeof(cliaddr);
@@ -45,23 +46,28 @@ exit(2);
     // printf("%s\n","Received request...");
     // Neu la 0 thi la da fork sang process con
     if ((childpid = fork()) == 0) {
+      config_DB();
       //printf ("%s\n","Child created for dealing with client requests");
       // close listening socket of child
       close (listenfd);
       while ((n = recv(connfd, buff, MAXLINE, 0)) > 0)  {
 	// Nhan buff tu client va gui answer o day
-	printf("%s","String received from and resent to the client:");
-	puts(buff);
-	send(connfd, buff, n, 0);
+	printf("%s","Tao la ChatBot: ");
+	//strcpy(buff, get_reply(buff));
+	//puts(buff);
+	puts(get_reply(buff));
+	send(connfd, get_reply(buff), MAXLINE, 0);
       }
       
       if (n < 0)
 	printf("%s\n", "Read error");
       // Handle close client socket, neu tat thi close
-      close(connfd);
+      //close(connfd);
+      //close_DB();
       exit(0);
     }
     // Dong socket cua server chinh
     close(connfd);
+    
   }
 }

@@ -1,10 +1,10 @@
 CC = gcc
 CFLAGS =
-DEPS = 
-OBJ = DB_analyst.o 
+DEPS = DB_analyst.h
+OBJ = DB_analyst.o server.o
 
 %.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) -c -o $@ $< $(CFLAGS) `mysql_config --cflags --libs` 
 
 server: $(OBJ)
-	gcc -o $@ $^ $(CFLAGS) `mysql_config --cflags --libs`
+	gcc -o $@ $^ $(CFLAGS) `mysql_config --cflags --libs` 
