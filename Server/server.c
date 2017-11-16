@@ -11,8 +11,6 @@
 #define SERV_PORT 8080 // port
 #define LISTENQ 16 // maximum number of client connections
 
-
-
 int main ()
 {
   int listenfd, connfd, n;
@@ -26,7 +24,7 @@ int main ()
   //If sockfd<0 there was an error in the creation of the socket
   if ((listenfd = socket (AF_INET, SOCK_STREAM, 0)) <0) {
     perror("Problem in creating the socket");
-exit(2);
+    exit(2);
   }
   
   //preparation of the socket address
@@ -56,13 +54,12 @@ exit(2);
       close (listenfd);
       while ((n = recv(connfd, buff, MAXLINE, 0)) > 0)  {
 	// Nhan buff tu client va gui answer o day
-	printf("%s","Xau tu Client: ");
-	printf("%s\n", buff);
-	printf("%s\n", extract_header(buff));
-	//printf("1: %s\n", header_process(buff));
+        
+	printf("Xau tu Client: %s\n", buff);
+	printf("HEADER da cat: %s\n", extract_header(buff));
 	//Xu ly Header
-
-    	send(connfd, buff, MAXLINE, 0);
+	tmp = header_process(buff);
+    	send(connfd, tmp, MAXLINE, 0);
       }
       if (n < 0)
 	printf("%s\n", "Read error");

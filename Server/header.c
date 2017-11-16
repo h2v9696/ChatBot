@@ -1,7 +1,4 @@
-#include <stdio.h>
-#include <string.h>
 #include "header.h"
-#include "DB_analyst.h"
 
 char HEADERS[NUMBER_OF_HEADERS][25] = {
     "CHOOSE",
@@ -36,7 +33,7 @@ char* extract_header(char* line)
     return extractedHeader;
 }
 
-int check_header(char* header)
+/*int check_header(char* header)
 {
     int i = 0;
     //check header with every existed headers
@@ -61,7 +58,7 @@ int check_header(char* header)
     }
     //if loop done, its mean no HEADER equal with header
     return 0;
-}
+    }*/
 
 int check_cut_position(char* line, char characterToCut)
 {
@@ -70,6 +67,7 @@ int check_cut_position(char* line, char characterToCut)
     while(i < length)
     {
         if(line[i] == characterToCut) return i;
+	i++;
     }
     return -1;
 }
@@ -81,25 +79,24 @@ char* header_process(char *s) {
   int pos;
   header = extract_header(s);
 
-    //printf("Dang Add...");
   if (strcmp(header, "MESS") == 0) {
-    return get_reply(s+strlen(header)+1);
+    //printf("Dang Add...%s.\n", header);  
+    return get_reply(s + strlen(header) + 1);
   }  	
-    //printf("Dang Add...%s.cc\n",header);
+  //printf("Dang Add...%s.\n",header);
   if (strcmp(header, "ADD") == 0) {
-    //mess = s + strlen(header) + 1;
-    printf("Dang Add...");
-    /*pos = check_cut_position(mess, '\\');
+    mess = s + strlen(header) + 1;
+    pos = check_cut_position(mess, '\\');
     rep = mess + pos + 1;
     mess[pos] = '\0';
     if (insert_data(mess, rep)) {
-	return "Loi khong insert duoc";
+      return "Da xay ra loi khong them cach tra loi duoc!";
     } else {
-	return "Da insert";		
-    }*/
+      return "Da them cach tra loi cho Bot, cam on ban!";		
+    }
 
   }
-	return "OK";
+  return "OK";
 }
 /*void main ()
 {

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include "DB_analyst.h"
 #define NUMBER_OF_HEADERS 25
 
 //Gan header

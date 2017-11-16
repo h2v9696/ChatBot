@@ -11,9 +11,9 @@ void finish_with_error();
 void change_query(char* query,char *s);
 //Khoi tao
 void config_DB();
-
+// Lay cau tra loi
 char* get_reply(char *s);
-
+// Them vao DB
 int insert_data(char* mess,char* reply);
 
 void close_DB();
