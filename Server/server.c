@@ -8,19 +8,10 @@
 #include "header.h"
 
 #define MAXLINE 4096 // max text line length
-#define SERV_PORT 3000 // port
+#define SERV_PORT 8080 // port
 #define LISTENQ 16 // maximum number of client connections
 
-char* header_process(char *s) {
-  char* header;
-  
-  strcpy(header, extract_header(s));
-  printf("%d\n", strcmp(header, "MESS"));
-  if (strcmp(header, "MESS") == 0) {
-    
-    return get_reply(s+strlen(header)+1);
-  } 
-}
+
 
 int main ()
 {
@@ -67,14 +58,12 @@ exit(2);
 	// Nhan buff tu client va gui answer o day
 	printf("%s","Xau tu Client: ");
 	printf("%s\n", buff);
-	//printf("%s\n", extract_header(buff));
-	//printf("%s\n", header_process(buff));
+	printf("%s\n", extract_header(buff));
+	//printf("1: %s\n", header_process(buff));
 	//Xu ly Header
-	//if (strcmp(extract_header(buff), "MESS") == 0) {
-	    send(connfd, get_reply(buff+strlen(extract_header(buff))+1), MAXLINE, 0);
-	    //}
+
+    	send(connfd, buff, MAXLINE, 0);
       }
-      
       if (n < 0)
 	printf("%s\n", "Read error");
       // Handle close client socket, neu tat thi close

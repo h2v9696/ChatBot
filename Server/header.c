@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "header.h"
+#include "DB_analyst.h"
 
 char HEADERS[NUMBER_OF_HEADERS][25] = {
     "CHOOSE",
@@ -9,7 +10,7 @@ char HEADERS[NUMBER_OF_HEADERS][25] = {
 
 char* bind_header(char* header, char* line)
 {
-    char *bindedHeader;
+    char *bindedHeader = (char *) malloc (256 * sizeof(char));
     if(line != NULL)
     {
         strcpy (bindedHeader, header);
@@ -26,11 +27,12 @@ char* bind_header(char* header, char* line)
 char* extract_header(char* line)
 {
     int i = 0;
-    char *extractedHeader;
+    char *extractedHeader = (char *) malloc (25 * sizeof(char));
     do {
         extractedHeader[i] = line[i];
         i++;
     } while(line[i] != ' ' && i <= 25);
+    extractedHeader[i] = '\0';
     return extractedHeader;
 }
 
@@ -72,6 +74,33 @@ int check_cut_position(char* line, char characterToCut)
     return -1;
 }
 
+char* header_process(char *s) {
+  char* header = (char *) malloc (25 * sizeof(char));
+  char* mess;
+  char* rep;
+  int pos;
+  header = extract_header(s);
+
+    //printf("Dang Add...");
+  if (strcmp(header, "MESS") == 0) {
+    return get_reply(s+strlen(header)+1);
+  }  	
+    //printf("Dang Add...%s.cc\n",header);
+  if (strcmp(header, "ADD") == 0) {
+    //mess = s + strlen(header) + 1;
+    printf("Dang Add...");
+    /*pos = check_cut_position(mess, '\\');
+    rep = mess + pos + 1;
+    mess[pos] = '\0';
+    if (insert_data(mess, rep)) {
+	return "Loi khong insert duoc";
+    } else {
+	return "Da insert";		
+    }*/
+
+  }
+	return "OK";
+}
 /*void main ()
 {
     char line[256];

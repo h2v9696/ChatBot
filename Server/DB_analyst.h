@@ -14,4 +14,6 @@ void config_DB();
 
 char* get_reply(char *s);
 
+int insert_data(char* mess,char* reply);
+
 void close_DB();
