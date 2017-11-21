@@ -41,7 +41,7 @@ void config_DB()
       fprintf(stderr, "mysql_init() failed\n");
       exit(1);
     }
-  if (mysql_real_connect(con, "localhost", "root", "leanhtuan",
+  if (mysql_real_connect(con, "localhost", "root", "vietvip96",
 			 "BotChat", 0, NULL,  0) == NULL)
     {
       finish_with_error(con);

@@ -10,7 +10,6 @@
 #define MAXLINE 4096 /*max text line length*/
 #define SERV_PORT 8080 /*port*/
 
-
 //tach ho ra lam cai thu vien :v eo biet lam makefile nen de vao day de chay
 GtkWidget *g_tey_mess;
 GtkWidget *g_tbf_mess;
@@ -20,11 +19,6 @@ GtkWidget *g_dag_add;
 int sockfd;
 char sendline[MAXLINE], recvline[MAXLINE];
 // called when button send is clicked sua tham so de truyen vao
-void on_btn_send_clicked()
-{
- 
-}
-
 
 //khi nhan enter thi hien mess
 void on_tey_mess_activate()
@@ -40,11 +34,22 @@ void on_tey_mess_activate()
   strcpy(sendline,mess);
   gtk_entry_set_text(GTK_ENTRY(g_tey_mess),"");
   
+  if ((strstr(sendline, "\\") == NULL) && (sendline[0] != '\0')) {
+    
+    // Gui mess
+    if (sendline[0] == '-') {
+      strcpy (sendline, bind_header("FUNC", sendline));
+    } else {
+      strcpy (sendline, bind_header("MESS", sendline));
+    }
+    
+    send(sockfd, sendline, strlen(sendline) + 1, 0);
 
-  strcpy (sendline, bind_header("MESS", sendline));
-  send(sockfd, sendline, strlen(sendline) + 1, 0);
-
-
+  } else {
+    //Thong bao khong nhap dau slash
+    gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER(g_tbf_mess),&iter,0);
+    gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,"Khong de trong hoac nhap dau slash!",-1);
+  }
 
   strcpy(recvline,"\0");
   if (recv(sockfd, recvline, MAXLINE,0) == 0){
@@ -153,7 +158,6 @@ int main(int argc, char **argv)
     perror("Problem in connecting to the server");
     exit(3);
   }
-  
   //gtk config
   GtkBuilder      *builder; 
     GtkWidget       *window;
