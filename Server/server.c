@@ -56,9 +56,10 @@ int main ()
 	// Nhan buff tu client va gui answer o day
         
 	printf("Xau tu Client: %s\n", buff);
-	printf("HEADER da cat: %s\n", extract_header(buff));
-	//Xu ly Header
 	tmp = header_process(buff);
+        printf("HEADER da cat: %s\n", tmp);
+	//Xu ly Header
+	
     	send(connfd, tmp, MAXLINE, 0);
       }
       if (n < 0)
