@@ -41,7 +41,7 @@ void config_DB()
       fprintf(stderr, "mysql_init() failed\n");
       exit(1);
     }
-  if (mysql_real_connect(con, "localhost", "root", "vietvip96",
+  if (mysql_real_connect(con, "localhost", "root", "leanhtuan",
 			 "BotChat", 0, NULL,  0) == NULL)
     {
       finish_with_error(con);
@@ -79,10 +79,10 @@ char* get_reply(char *s)
 int insert_data(char* mess,char* reply)
 {
   char
-    I_query_mess[MAXLEN] = "INSERT INTO Message (mess)  SELECT  '%s' AS tmp WHERE NOT EXISTS ( SELECT mess FROM Message WHERE mess = '%s') LIMIT 1;",
-    I_query_mess_set[MAXLEN] = "SELECT Mcode INTO @Mcode FROM Message WHERE mess = '%s';",
-    I_query_reply[MAXLEN] = "INSERT IGNORE INTO Reply (reply)  SELECT '%s' AS tmp WHERE NOT EXISTS ( SELECT reply FROM Reply WHERE reply = '%s') LIMIT 1;",
-    I_query_reply_set[MAXLEN] = "SELECT  Rcode INTO  @Rcode FROM Reply  WHERE reply = '%s';",
+    I_query_mess[MAXLEN] = "INSERT INTO Message (mess)  SELECT  \"%s\" AS tmp WHERE NOT EXISTS ( SELECT mess FROM Message WHERE mess = \"%s\") LIMIT 1;",
+    I_query_mess_set[MAXLEN] = "SELECT Mcode INTO @Mcode FROM Message WHERE mess = \"%s\";",
+    I_query_reply[MAXLEN] = "INSERT IGNORE INTO Reply (reply)  SELECT \"%s\" AS tmp WHERE NOT EXISTS ( SELECT reply FROM Reply WHERE reply = \"%s\") LIMIT 1;",
+    I_query_reply_set[MAXLEN] = "SELECT  Rcode INTO  @Rcode FROM Reply  WHERE reply = \"%s\";",
     I_query_relationship[MAXLEN] = "INSERT INTO Relationship (Mcode,Rcode) SELECT * FROM(SELECT @Mcode, @Rcode) AS tmp WHERE NOT EXISTS ( SELECT Mcode,Rcode FROM Relationship WHERE Mcode = @Mcode AND Rcode =@Rcode ) LIMIT 1;";
     //int r=0;
      if (mysql_query(con,"ALTER TABLE Message AUTO_INCREMENT = 1;"))
