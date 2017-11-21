@@ -11,5 +11,9 @@ char* extract_header(char* line);
 int check_header(char* header);
 //Kiem tra vi tri ngat
 int check_cut_position(char* line, char characterToCut);
-//
+//Chon phan tu trong param
+char* choose(char* param);
+//Xu ly cac header la function
+char* func_header(char* s);
+//Xu ly header
 char* header_process(char *s);

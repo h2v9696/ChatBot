@@ -9,6 +9,8 @@
 #define MAXLINE 4096 /*max text line length*/
 #define SERV_PORT 8080 /*port*/
 
+
+
 int main(int argc, char **argv) 
 {
   int sockfd;
@@ -40,15 +42,22 @@ int main(int argc, char **argv)
   }
   // Gui message, them header vao day
   while (fgets(sendline, MAXLINE, stdin) != NULL) {
+    //Xu ly neu client go lenh chuc nang (-help, -choose, -infor)
+    
     // Loai bo Enter
     sendline[strlen(sendline) - 1] = '\0';
-    //if (strstr(sendline, "\\") == NULL) {
+    if (strstr(sendline, "\\") == NULL) {
       // Gui mess
-      //strcpy (sendline, bind_header("MESS", sendline));
-      //send(sockfd, sendline, strlen(sendline) + 1, 0);
+      if (sendline[0] == '-') {
+	strcpy (sendline, bind_header("FUNC", sendline));
+      } else {
+	strcpy (sendline, bind_header("MESS", sendline));
+      }
 
-       strcpy (sendline, bind_header("ADD", sendline));
-       send(sockfd, sendline, strlen(sendline) + 1, 0);
+      send(sockfd, sendline, strlen(sendline) + 1, 0);
+    
+      // strcpy (sendline, bind_header("ADD", sendline));
+      // send(sockfd, sendline, strlen(sendline) + 1, 0);
       if (recv(sockfd, recvline, MAXLINE,0) == 0){
 	perror("The server terminated prematurely"); 
 	exit(4);
@@ -57,10 +66,10 @@ int main(int argc, char **argv)
       printf("%s", "Tao la ChatBot: ");
       fputs(recvline, stdout);
       printf("\n");
-    //} else {
-      // Thong bao khong nhap dau slash
-    //  printf("Khong nhap duoc slash!");
-    //}
+    } else {
+      //Thong bao khong nhap dau slash
+      printf("Khong nhap duoc slash!");
+    }
 
   }
   
