@@ -10,6 +10,7 @@
 #define MAXLINE 4096 /*max text line length*/
 #define SERV_PORT 8080 /*port*/
 
+
 //tach ho ra lam cai thu vien :v eo biet lam makefile nen de vao day de chay
 GtkWidget *g_tey_mess;
 GtkWidget *g_tbf_mess;
@@ -177,18 +178,41 @@ int main(int argc, char **argv)
     gtk_widget_show(window);                
     gtk_main();
   // Gui message, them header vao day
-  
-    // Loai bo Enter
-    //sendline[strlen(sendline) - 1] = '\0';
-    //if (strstr(sendline, "\\") == NULL) {
-      // Gui mess
-      //strcpy (sendline, bind_header("MESS", sendline));
-      //send(sockfd, sendline, strlen(sendline) + 1, 0);
 
-    //} else {
-      // Thong bao khong nhap dau slash
-    //  printf("Khong nhap duoc slash!");
-    //}
+  /*while (fgets(sendline, MAXLINE, stdin) != NULL) {
+    //Xu ly neu client go lenh chuc nang (-help, -choose, -infor)
     
-    exit(0);
+    // Loai bo Enter
+    sendline[strlen(sendline) - 1] = '\0';
+    if (strstr(sendline, "\\") == NULL) {
+
+      // Gui mess
+      if (sendline[0] == '-') {
+	strcpy (sendline, bind_header("FUNC", sendline));
+      } else {
+	strcpy (sendline, bind_header("MESS", sendline));
+      }
+
+
+      send(sockfd, sendline, strlen(sendline) + 1, 0);
+    
+      // strcpy (sendline, bind_header("ADD", sendline));
+      // send(sockfd, sendline, strlen(sendline) + 1, 0);
+      if (recv(sockfd, recvline, MAXLINE,0) == 0){
+	perror("The server terminated prematurely"); 
+	exit(4);
+      }
+      // Thay cai nay bang ten con ChatBot
+      printf("%s", "Tao la ChatBot: ");
+      fputs(recvline, stdout);
+      printf("\n");
+    } else {
+      //Thong bao khong nhap dau slash
+      printf("Khong nhap duoc slash!");
+    }
+
+  }*/
+  
+  exit(0);
+
 }
