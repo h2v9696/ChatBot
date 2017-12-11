@@ -5,7 +5,6 @@
 #include <netinet/in.h>
 #include <string.h>
 #include <gtk/gtk.h>
-#include "../Server/header.h"
 
 #define MAXLINE 4096 /*max text line length*/
 #define SERV_PORT 8080 /*port*/
@@ -19,7 +18,21 @@ GtkWidget *g_dag_add;
 int sockfd;
 char sendline[MAXLINE], recvline[MAXLINE];
 // called when button send is clicked sua tham so de truyen vao
-
+char* bind_header(char* header, char* line)
+{
+    char *bindedHeader = (char *) malloc (256 * sizeof(char));
+    if(line != NULL)
+    {
+        strcpy (bindedHeader, header);
+        strcat (bindedHeader, " ");
+        strcat (bindedHeader, line);
+        return bindedHeader;
+    }
+    else
+    {
+        return NULL;
+    }
+}
 //khi nhan enter thi hien mess
 void on_tey_mess_activate()
 {
@@ -27,14 +40,15 @@ void on_tey_mess_activate()
   char tmp[256];
   
   const gchar *mess = gtk_entry_get_text(GTK_ENTRY(g_tey_mess));
-  gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER(g_tbf_mess),&iter,0);
-  gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(bind_header("Toi:", mess),"\n"),-1);
-  
-  strcpy(sendline,"\0");
-  strcpy(sendline,mess);
-  gtk_entry_set_text(GTK_ENTRY(g_tey_mess),"");
-  
-  if ((strstr(sendline, "\\") == NULL) && (sendline[0] != '\0')) {
+  if (mess[0] != '\0')
+  {
+    gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER(g_tbf_mess),&iter,0);
+    gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(bind_header("Toi:", mess),"\n"),-1);
+    
+    strcpy(sendline,"\0");
+    strcpy(sendline,mess);
+    gtk_entry_set_text(GTK_ENTRY(g_tey_mess),"");
+ 
     
     // Gui mess
     if (sendline[0] == '-') {
@@ -44,22 +58,21 @@ void on_tey_mess_activate()
     }
     
     send(sockfd, sendline, strlen(sendline) + 1, 0);
+    
+    
+    strcpy(recvline,"\0");
+    if (recv(sockfd, recvline, MAXLINE,0) == 0){
+      perror("The server terminated prematurely"); 
+      exit(4);
+    }
 
-  } else {
-    //Thong bao khong nhap dau slash
     gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER(g_tbf_mess),&iter,0);
-    gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,"Khong de trong hoac nhap dau slash!",-1);
-  }
+    gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(bind_header("CuteBot:", recvline),"\n"),-1);
+     } else {
 
-  strcpy(recvline,"\0");
-  if (recv(sockfd, recvline, MAXLINE,0) == 0){
-    perror("The server terminated prematurely"); 
-    exit(4);
-  }
-
-  gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER(g_tbf_mess),&iter,0);
-  gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(bind_header("CuteBot:", recvline),"\n"),-1);
-
+    gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER(g_tbf_mess),&iter,0);
+    gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,"Hay nhap gi do!\n",-1);
+     }
 }
 
 //khi nhan add thi hien dialog
@@ -76,7 +89,7 @@ void on_btn_add_clicked()
        break;
     default:
         printf("CANCEL\n");
-       break;
+	break;
   }
   gtk_widget_hide (g_dag_add);
 }
@@ -98,6 +111,7 @@ on_btn_ok_clicked()
 {
   const gchar *mess = gtk_entry_get_text(GTK_ENTRY(g_tey_mess_add));
   const gchar *reply = gtk_entry_get_text(GTK_ENTRY(g_tey_reply_add));
+  if (strstr(mess,"\\") == NULL && strstr(reply, "\\") == NULL) {
   gtk_dialog_response (GTK_DIALOG (g_dag_add), GTK_RESPONSE_ACCEPT);
   strcpy(sendline,"\0");
   strcpy(sendline,mess);
@@ -113,7 +127,9 @@ on_btn_ok_clicked()
   gtk_entry_set_text(GTK_ENTRY(g_tey_reply_add),"");
   gtk_dialog_response (GTK_DIALOG (g_dag_add), GTK_RESPONSE_ACCEPT);
 
-  //gtk_widget_destroy(g_dag_add);
+  } else {
+    printf("Khong duoc nhap slash!\n");
+  }  //gtk_widget_destroy(g_dag_add);
 }
 
 

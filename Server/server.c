@@ -43,9 +43,10 @@ int main ()
   for ( ; ; ) {
     clilen = sizeof(cliaddr);
     // accept a connection
+    //printf ("Accept a client...");
     connfd = accept (listenfd, (struct sockaddr *) &cliaddr, &clilen);
     
-    // printf("%s\n","Received request...");
+    printf("%s\n","Received request...");
     // Neu la 0 thi la da fork sang process con
     if ((childpid = fork()) == 0) {
       config_DB();
@@ -65,8 +66,8 @@ int main ()
       if (n < 0)
 	printf("%s\n", "Read error");
       // Handle close client socket, neu tat thi close
-      //close(connfd);
-      //close_DB();
+      close(connfd);
+      close_DB();
       exit(0);
     }
     // Dong socket cua server chinh

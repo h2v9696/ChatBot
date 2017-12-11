@@ -52,7 +52,7 @@ char* get_reply(char *s)
 {
   //de tam mac dinh tra loi (hard code) cho cau hoi khong biet
   //co the sua de chon 1 cau tra loi trong so set cau tra loi mac dinh cho cau hoi khong tim thay
-  char S_query[MAXLEN] = "SELECT IFNULL( (SELECT R.Reply FROM Message AS M, Relationship AS Re, Reply AS R WHERE M.Mcode = Re.Mcode AND Re.Rcode = R.Rcode AND M.Mess LIKE '%%s%' ORDER BY RAND() LIMIT 1) , 'd* b* m** d** biet')";
+  char S_query[MAXLEN] = "SELECT IFNULL( (SELECT R.Reply FROM Message AS M, Relationship AS Re, Reply AS R WHERE M.Mcode = Re.Mcode AND Re.Rcode = R.Rcode AND M.Mess LIKE '%%s%' ORDER BY RAND() LIMIT 1) , 'Cant you teach me how to answer that? <3')";
   int r=0;
   change_query(S_query,s);
   if (mysql_query(con, S_query))
