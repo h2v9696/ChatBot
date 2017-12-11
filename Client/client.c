@@ -17,6 +17,9 @@ GtkWidget *g_tey_reply_add;
 GtkWidget *g_dag_add;
 int sockfd;
 char sendline[MAXLINE], recvline[MAXLINE];
+int received_bytes;
+int remaining_bytes;
+
 // called when button send is clicked sua tham so de truyen vao
 char* bind_header(char* header, char* line)
 {
@@ -61,9 +64,19 @@ void on_tey_mess_activate()
     
     
     strcpy(recvline,"\0");
-    if (recv(sockfd, recvline, MAXLINE,0) == 0){
-      perror("The server terminated prematurely"); 
-      exit(4);
+
+
+    received_bytes = 0;
+    remaining_bytes = sizeof(recvline);
+
+    while (remaining_bytes > 0) {
+        int res = recv(sockfd , &recvline[received_bytes] , remaining_bytes, 0);
+        if (res = 0) {
+            perror("The server terminated prematurely"); 
+      	    exit(4);
+        }
+        received_bytes += res;
+        remaining_bytes -= res;
     }
 
     gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER(g_tbf_mess),&iter,0);
