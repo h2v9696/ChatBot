@@ -69,7 +69,7 @@ void on_tey_mess_activate()
 
     while (remaining_bytes > 0) {
         int res = recv(sockfd , &receive_buffer[received_bytes] , remaining_bytes, 0);
-        if (res = 0) {
+        if (res == 0) {
             perror("The server terminated prematurely"); 
       	    exit(4);
         }
