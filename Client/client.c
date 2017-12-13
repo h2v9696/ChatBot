@@ -64,18 +64,14 @@ void on_tey_mess_activate()
     
     
     char receive_buffer[MAXLINE];
-    int received_bytes = 0;
-    int remaining_bytes = sizeof(receive_buffer);
 
-    while (remaining_bytes > 0) {
-        int res = recv(sockfd , &receive_buffer[received_bytes] , remaining_bytes, 0);
-        if (res == 0) {
+
+   
+        if (recv(sockfd, receive_buffer, MAXLINE, 0) == 0) {
             perror("The server terminated prematurely"); 
       	    exit(4);
         }
-        received_bytes += res;
-        remaining_bytes -= res;
-    }
+   
 
     gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER(g_tbf_mess),&iter,0);
     gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(bind_header("CuteBot:", receive_buffer),"\n"),-1);
@@ -120,6 +116,7 @@ on_btn_cancel_clicked()
 
 on_btn_ok_clicked()
 {
+  GtkTextIter iter;
   const gchar *mess = gtk_entry_get_text(GTK_ENTRY(g_tey_mess_add));
   const gchar *reply = gtk_entry_get_text(GTK_ENTRY(g_tey_reply_add));
   if (strstr(mess,"\\") == NULL && strstr(reply, "\\") == NULL) {
@@ -134,6 +131,10 @@ on_btn_ok_clicked()
     perror("The server terminated prematurely"); 
     exit(4);
   }
+
+gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER(g_tbf_mess),&iter,0);
+    gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(bind_header("CuteBot:", recvline),"\n"),-1);
+
   gtk_entry_set_text(GTK_ENTRY(g_tey_mess_add),"");
   gtk_entry_set_text(GTK_ENTRY(g_tey_reply_add),"");
   gtk_dialog_response (GTK_DIALOG (g_dag_add), GTK_RESPONSE_ACCEPT);
