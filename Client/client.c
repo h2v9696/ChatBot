@@ -64,14 +64,19 @@ void on_tey_mess_activate()
     
     
     char receive_buffer[MAXLINE];
-
-
-   
-        if (recv(sockfd, receive_buffer, MAXLINE, 0) == 0) {
+    int received_bytes = 0;
+    int remaining_bytes = sizeof(receive_buffer);
+	
+ //   while (remaining_bytes > 0) {
+     //   int res = recv(sockfd , receive_buffer , remaining_bytes, 0);
+        if (recv(sockfd , receive_buffer , remaining_bytes, 0) == 0) {
             perror("The server terminated prematurely"); 
       	    exit(4);
         }
-   
+     //   received_bytes += res;
+     //   remaining_bytes -= res;
+	//printf("%d : %d\n", res, remaining_bytes);
+  //  }
 
     gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER(g_tbf_mess),&iter,0);
     gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(bind_header("CuteBot:", receive_buffer),"\n"),-1);
