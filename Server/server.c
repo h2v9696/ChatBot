@@ -56,11 +56,11 @@ int main ()
       while ((n = recv(connfd, buff, MAXLINE, 0)) > 0)  {
 	// Nhan buff tu client va gui answer o day
         
-	printf("Xau tu Client: %s\n", buff);
+	printf("String from Client: %s\n", buff);
 	tmp = header_process(buff);
-        printf("Xau da xu ly: %s\n", tmp);
+        printf("Answer: %s\n", tmp);
 	//Xu ly Header
-	printf("Len:%d MAXLINE:%d\n", strlen(tmp)*sizeof(char), MAXLINE);
+	printf("Length:%d\n\n", strlen(tmp)*sizeof(char));
     	send(connfd, tmp, MAXLINE, 0);
       }
       if (n < 0)

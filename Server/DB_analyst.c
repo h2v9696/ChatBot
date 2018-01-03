@@ -100,6 +100,7 @@ while ((row = mysql_fetch_row(result)))
       for(i = 0; i < num_fields; i++) 
       { 
 	if(strstr(s, row[i]) != NULL) {
+	  printf("Keyword: %s\n", row[i]);
 	  return get_reply(row[i]);
 	}
       } 
