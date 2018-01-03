@@ -52,7 +52,7 @@ char* get_reply(char *s)
 {
   //de tam mac dinh tra loi (hard code) cho cau hoi khong biet
   //co the sua de chon 1 cau tra loi trong so set cau tra loi mac dinh cho cau hoi khong tim thay
-  char S_query[MAXLEN] = "SELECT IFNULL( (SELECT R.Reply FROM Message AS M, Relationship AS Re, Reply AS R WHERE M.Mcode = Re.Mcode AND Re.Rcode = R.Rcode AND M.Mess LIKE '%%s%' ORDER BY RAND() LIMIT 1) , 'Cant you teach me how to answer that? <3')";
+  char S_query[MAXLEN] = "SELECT IFNULL( (SELECT R.Reply FROM Message AS M, Relationship AS Re, Reply AS R WHERE M.Mcode = Re.Mcode AND Re.Rcode = R.Rcode AND M.Mess LIKE '%%s%' ORDER BY RAND() LIMIT 1) , 'NULL')";
   int r=0;
   change_query(S_query,s);
   if (mysql_query(con, S_query))
@@ -74,7 +74,41 @@ char* get_reply(char *s)
   mysql_free_result(result);
   return row[0];
 }
+char* get_reply_keyword(char *s)
+{
+  char *answer; 
+  char S_query[MAXLEN] = "SELECT Mess FROM Message";
+  int r=0;
+  //change_query(S_query,s);
+  if (mysql_query(con, S_query))
+    {
+      finish_with_error(con);
+    }
+  MYSQL_RES *result = mysql_store_result(con);
+  
+  if (result == NULL)
+    {
+      finish_with_error(con);
+    }
+  
+  int num_fields = mysql_num_fields(result);
 
+  MYSQL_ROW row;
+
+while ((row = mysql_fetch_row(result))) 
+  { int i;
+      for(i = 0; i < num_fields; i++) 
+      { 
+	if(strstr(s, row[i]) != NULL) {
+	  return get_reply(row[i]);
+	}
+      } 
+
+  }
+
+  mysql_free_result(result);
+  return "Cant you teach me how to answer that? <3";
+}
 //insert mess va reply da co
 int insert_data(char* mess,char* reply)
 {

@@ -115,6 +115,7 @@ char* func_header(char* s) {
 
 char* header_process(char *s) {
   char* header = (char *) malloc (25 * sizeof(char));
+  char* answer = (char *) malloc (256 * sizeof(char));
   char* mess;
   char* rep;
   char* temp;
@@ -123,8 +124,16 @@ char* header_process(char *s) {
   header = extract_header(s);
 
   if (strcmp(header, "MESS") == 0) {
-    //printf("Dang Add...%s.\n", header);  
-    return get_reply(s + strlen(header) + 1);
+    answer = get_reply(s + strlen(header) + 1);
+    printf("Find exactly: %s\n", answer);
+    if (strcmp(answer, "NULL") == 0) {
+      //printf("Dang Add...%s.\n", header);  
+      answer = get_reply_keyword(s + strlen(header) + 1);
+
+      printf("Find by keyword: %s\n", answer);
+      //return get_reply_keyword(s + strlen(header) + 1);
+    }
+    return answer;
   }  	
   //printf("Dang Add...%s.\n",header);
   if (strcmp(header, "ADD") == 0) {
