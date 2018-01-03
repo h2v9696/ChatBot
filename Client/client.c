@@ -68,12 +68,12 @@ void on_tey_mess_activate()
 
       while (remaining_bytes > 0) {
 	//Fix loi o client khac nhan duoc recv khong mong muon
-	if (received_bytes == res) {
+	/*if (received_bytes == res) {
 	  memset(receive_buffer, 0 , strlen(receive_buffer));
 	  res = recv(sockfd , receive_buffer , remaining_bytes, 0);
 	  //printf("0 Recv:%s\nRes:%d Remain:%d Received:%d\n", receive_buffer, res, remaining_bytes,received_bytes);
 
-	} else
+	  } else*/
 	  res = recv(sockfd , &receive_buffer[received_bytes] , remaining_bytes, 0);
 	//printf("1 Recv:%s\nRes:%d Remain:%d Received:%d\n", receive_buffer, res, remaining_bytes,received_bytes);
         //if (recv(sockfd , receive_buffer , remaining_bytes, 0) == 0) {
@@ -84,7 +84,7 @@ void on_tey_mess_activate()
         received_bytes += res;
         remaining_bytes -= res;
 	//printf("2 Recv:%s\nRes:%d Remain:%d Received:%d\n", receive_buffer, res, remaining_bytes,received_bytes);
-	if (received_bytes >= strlen(receive_buffer)) break;
+	//if (received_bytes >= strlen(receive_buffer)) break;
 	
       }
       //printf("%d\n", recv(sockfd , &receive_buffer[received_bytes] , remaining_bytes, 0));
