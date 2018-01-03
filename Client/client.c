@@ -18,6 +18,36 @@ GtkWidget *g_dag_add;
 int sockfd;
 char sendline[MAXLINE], recvline[MAXLINE];
 
+char* get_Recv() {
+  char receive_buffer[MAXLINE];
+      int received_bytes = 0;
+      int remaining_bytes = sizeof(receive_buffer);
+      int res;
+      memset(receive_buffer, 0 , strlen(receive_buffer));
+
+      while (remaining_bytes > 0) {
+	//Fix loi o client khac nhan duoc recv khong mong muon
+	/*if (received_bytes == res) {
+	  memset(receive_buffer, 0 , strlen(receive_buffer));
+	  res = recv(sockfd , receive_buffer , remaining_bytes, 0);
+	  //printf("0 Recv:%s\nRes:%d Remain:%d Received:%d\n", receive_buffer, res, remaining_bytes,received_bytes);
+
+	  } else*/
+	  res = recv(sockfd , &receive_buffer[received_bytes] , remaining_bytes, 0);
+	//printf("1 Recv:%s\nRes:%d Remain:%d Received:%d\n", receive_buffer, res, remaining_bytes,received_bytes);
+        //if (recv(sockfd , receive_buffer , remaining_bytes, 0) == 0) {
+        if (res <= 0){ 
+	  perror("The server terminated prematurely"); 
+	  exit(4);
+        }
+        received_bytes += res;
+        remaining_bytes -= res;
+	//printf("2 Recv:%s\nRes:%d Remain:%d Received:%d\n", receive_buffer, res, remaining_bytes,received_bytes);
+	//if (received_bytes >= strlen(receive_buffer)) break;
+	
+      }
+      return receive_buffer;
+}
 
 // called when button send is clicked sua tham so de truyen vao
 char* bind_header(char* header, char* line)
@@ -60,7 +90,7 @@ void on_tey_mess_activate()
       
       send(sockfd, sendline, strlen(sendline) + 1, 0);
       
-      char receive_buffer[MAXLINE];
+      /*char receive_buffer[MAXLINE];
       int received_bytes = 0;
       int remaining_bytes = sizeof(receive_buffer);
       int res;
@@ -73,7 +103,7 @@ void on_tey_mess_activate()
 	  res = recv(sockfd , receive_buffer , remaining_bytes, 0);
 	  //printf("0 Recv:%s\nRes:%d Remain:%d Received:%d\n", receive_buffer, res, remaining_bytes,received_bytes);
 
-	  } else*/
+	  } else
 	  res = recv(sockfd , &receive_buffer[received_bytes] , remaining_bytes, 0);
 	//printf("1 Recv:%s\nRes:%d Remain:%d Received:%d\n", receive_buffer, res, remaining_bytes,received_bytes);
         //if (recv(sockfd , receive_buffer , remaining_bytes, 0) == 0) {
@@ -86,10 +116,10 @@ void on_tey_mess_activate()
 	//printf("2 Recv:%s\nRes:%d Remain:%d Received:%d\n", receive_buffer, res, remaining_bytes,received_bytes);
 	//if (received_bytes >= strlen(receive_buffer)) break;
 	
-      }
+      }*/
       //printf("%d\n", recv(sockfd , &receive_buffer[received_bytes] , remaining_bytes, 0));
       gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER(g_tbf_mess),&iter,0);
-      gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(bind_header("CuteBot:", receive_buffer),"\n"),-1);
+      gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(bind_header("CuteBot:", get_Recv()),"\n"),-1);
     } else {
     gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER(g_tbf_mess),&iter,0);
     gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,"Hay nhap gi do!\n",-1);
@@ -141,13 +171,13 @@ on_btn_ok_clicked()
   strcat(sendline,reply);
   strcpy (sendline, bind_header("ADD", sendline));
   send(sockfd, sendline, strlen(sendline) + 1, 0);
-  if (recv(sockfd, recvline, MAXLINE,0) == 0){
+  /*if (recv(sockfd, recvline, MAXLINE,0) == 0){
     perror("The server terminated prematurely"); 
     exit(4);
-  }
+    }*/
 
   gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER(g_tbf_mess),&iter,0);
-  gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(bind_header("CuteBot:", recvline),"\n"),-1);
+  gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(bind_header("CuteBot:", get_Recv()),"\n"),-1);
   
   gtk_entry_set_text(GTK_ENTRY(g_tey_mess_add),"");
   gtk_entry_set_text(GTK_ENTRY(g_tey_reply_add),"");
