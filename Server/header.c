@@ -3,11 +3,6 @@
 #define MAX_PARAM 10
 #include <stdio.h>
 
-char HEADERS[NUMBER_OF_HEADERS][25] = {
-    "CHOOSE",
-    "ADD"
-};
-
 char* bind_header(char* header, char* line)
 {
     char *bindedHeader = (char *) malloc (256 * sizeof(char));
@@ -35,33 +30,6 @@ char* extract_header(char* line)
     extractedHeader[i] = '\0';
     return extractedHeader;
 }
-
-/*int check_header(char* header)
-{
-    int i = 0;
-    //check header with every existed headers
-    while(i < NUMBER_OF_HEADERS)
-    {
-        int length;
-        int j = 0;
-        length = strlen(HEADERS[i]);
-        //check every char from start of header with HEADERS's char
-        while(j < length)
-        {
-            if(HEADERS[i][j] != header[j])
-            {
-                //if different, break
-                break;
-            }
-            j++;
-        }
-        // if j == length, its mean this header existed
-        if(j == length) return 1;
-        i++;
-    }
-    //if loop done, its mean no HEADER equal with header
-    return 0;
-    }*/
 
 int check_cut_position(char* line, char characterToCut)
 {
@@ -178,27 +146,3 @@ char* header_process(char *s) {
   }
   return "OK";
 }
-
-
-/*void main ()
-{
-    char line[256];
-    char final[256];
-    char exHeader[25];
-    int isHeader;
-    int count;
-    strcpy(line, "cat, dogs ");
-    strcpy(final, bindHeader(HEADERS[0],line));
-    strcpy(exHeader, ExtractHeader(final));
-    isHeader = CheckHeader(exHeader);
-    printf("%s\n",final);
-    printf("%s\n",exHeader);
-    if(isHeader == 1)
-    {
-        printf ("This is an existed header\n");
-    }
-    else
-    {
-        printf("This isnt an existed header\n");
-    }
-}*/

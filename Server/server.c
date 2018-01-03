@@ -17,7 +17,7 @@ int main ()
   pid_t childpid;
   socklen_t clilen;
   char buff[MAXLINE];
-  char* tmp;
+  char* tmp = (char *) malloc (MAXLINE * sizeof(char));
   struct sockaddr_in cliaddr, servaddr;
   
   //Create a socket for the soclet
@@ -58,9 +58,9 @@ int main ()
         
 	printf("Xau tu Client: %s\n", buff);
 	tmp = header_process(buff);
-        printf("HEADER da cat: %s\n", tmp);
+        printf("Xau da xu ly: %s\n", tmp);
 	//Xu ly Header
-	
+	printf("Len:%d MAXLINE:%d\n", strlen(tmp)*sizeof(char), MAXLINE);
     	send(connfd, tmp, MAXLINE, 0);
       }
       if (n < 0)
