@@ -46,7 +46,9 @@ void on_tey_mess_activate()
   if (mess[0] != '\0')
     {
       gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER(g_tbf_mess),&iter);
-      gtk_text_buffer_insert_with_tags_by_name(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(bind_header("Toi:", mess),"\n"),-1,"color2",NULL);
+gtk_text_buffer_insert_with_tags_by_name(GTK_TEXT_BUFFER(g_tbf_mess),&iter,"Toi: ",-1, "red_fg", NULL);
+      gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(mess,"\n"),-1);
+      //gtk_text_buffer_insert_with_tags_by_name(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(bind_header("Toi:", mess),"\n"),-1,"color2",NULL);
       //gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(bind_header("Toi:", mess),"\n"),-1);
       //gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER(g_tbf_mess),&endline);
       //gtk_text_buffer_apply_tag(GTK_TEXT_BUFFER(g_tbf_mess),tag,&iter,&endline);
@@ -93,7 +95,9 @@ void on_tey_mess_activate()
       
       //printf("%d\n", recv(sockfd , &receive_buffer[received_bytes] , remaining_bytes, 0));
       gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER(g_tbf_mess),&iter);
-      gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(bind_header("CuteBot", receive_buffer),"\n"),-1);
+gtk_text_buffer_insert_with_tags_by_name(GTK_TEXT_BUFFER(g_tbf_mess),&iter,"CuteBot: ",-1, "blue_fg", "lmarg",  NULL);
+gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(receive_buffer,"\n"),-1);
+      //gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(bind_header("CuteBot", receive_buffer),"\n"),-1);
     } else {
     gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER(g_tbf_mess),&iter);
     gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,"Hay nhap gi do!\n",-1);
@@ -181,7 +185,9 @@ char receive_buffer[MAXLINE];
 	
       }
   gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER(g_tbf_mess),&iter);
-  gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(bind_header("CuteBot:", receive_buffer),"\n"),-1);
+gtk_text_buffer_insert_with_tags_by_name(GTK_TEXT_BUFFER(g_tbf_mess),&iter,"CuteBot: ",-1, "blue_fg", "lmarg",  NULL);
+  gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(receive_buffer,"\n"),-1);
+  //gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(bind_header("CuteBot:", receive_buffer),"\n"),-1);
   
   gtk_entry_set_text(GTK_ENTRY(g_tey_mess_add),"");
   gtk_entry_set_text(GTK_ENTRY(g_tey_reply_add),"");
@@ -252,10 +258,15 @@ int main(int argc, char **argv)
     g_tey_mess_add = GTK_WIDGET(gtk_builder_get_object(builder, "tey_mess_add"));
     g_tey_reply_add = GTK_WIDGET(gtk_builder_get_object(builder, "tey_reply_add"));
     g_tvw_mess = GTK_WIDGET(gtk_builder_get_object(builder, "tvw_mess"));
-    gtk_text_buffer_create_tag (GTK_TEXT_BUFFER(g_tbf_mess), "color2","foreground","blue",NULL);
-    gtk_text_buffer_create_tag (GTK_TEXT_BUFFER(g_tbf_mess), "color1","foreground","brown",NULL);
+    //gtk_text_buffer_create_tag (GTK_TEXT_BUFFER(g_tbf_mess), "color2","foreground","blue",NULL);
+    //gtk_text_buffer_create_tag (GTK_TEXT_BUFFER(g_tbf_mess), "color1","foreground","brown",NULL);
     //gtk_dialog_response (Gg_dag,gint response_id);
-   	
+   	gtk_text_buffer_create_tag(GTK_TEXT_BUFFER(g_tbf_mess), "lmarg", 
+      "left_margin", 20, NULL);
+gtk_text_buffer_create_tag(GTK_TEXT_BUFFER(g_tbf_mess), "blue_fg", 
+      "foreground", "blue", NULL);
+gtk_text_buffer_create_tag(GTK_TEXT_BUFFER(g_tbf_mess), "red_fg", 
+      "foreground", "red", NULL);
     g_object_unref(builder);
     gtk_widget_show(window);                
     gtk_main();
