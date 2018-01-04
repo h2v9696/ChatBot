@@ -9,16 +9,14 @@
 #define MAXLINE 4096 /*max text line length*/
 #define SERV_PORT 8080 /*port*/
 
-//tach ho ra lam cai thu vien :v eo biet lam makefile nen de vao day de chay
 GtkWidget *g_tey_mess;
 GtkWidget *g_tbf_mess;
 GtkWidget *g_tey_mess_add;
 GtkWidget *g_tey_reply_add;
 GtkWidget *g_dag_add;
+GtkWidget *g_tvw_mess;
 int sockfd;
 char sendline[MAXLINE], recvline[MAXLINE];
-
-
 
 // called when button send is clicked sua tham so de truyen vao
 char* bind_header(char* header, char* line)
@@ -40,18 +38,22 @@ char* bind_header(char* header, char* line)
 void on_tey_mess_activate()
 {
   GtkTextIter iter;
+  GtkTextIter endline;
+  GtkTextMark *mark;
   char tmp[256];
   
   const gchar *mess = gtk_entry_get_text(GTK_ENTRY(g_tey_mess));
   if (mess[0] != '\0')
     {
-      gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER(g_tbf_mess),&iter,0);
-      gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(bind_header("Toi:", mess),"\n"),-1);
-      
+      gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER(g_tbf_mess),&iter);
+      gtk_text_buffer_insert_with_tags_by_name(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(bind_header("Toi:", mess),"\n"),-1,"color2",NULL);
+      //gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(bind_header("Toi:", mess),"\n"),-1);
+      //gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER(g_tbf_mess),&endline);
+      //gtk_text_buffer_apply_tag(GTK_TEXT_BUFFER(g_tbf_mess),tag,&iter,&endline);
       strcpy(sendline,"\0");
       strcpy(sendline,mess);
       gtk_entry_set_text(GTK_ENTRY(g_tey_mess),"");
- 
+      
       // Gui mess
       if (sendline[0] == '-') {
 	strcpy (sendline, bind_header("FUNC", sendline));
@@ -88,14 +90,19 @@ void on_tey_mess_activate()
 	//if (received_bytes >= strlen(receive_buffer)) break;
 	
       }
+      
       //printf("%d\n", recv(sockfd , &receive_buffer[received_bytes] , remaining_bytes, 0));
-      gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER(g_tbf_mess),&iter,0);
-      gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(bind_header("CuteBot:", receive_buffer),"\n"),-1);
+      gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER(g_tbf_mess),&iter);
+      gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(bind_header("CuteBot", receive_buffer),"\n"),-1);
     } else {
-    gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER(g_tbf_mess),&iter,0);
+    gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER(g_tbf_mess),&iter);
     gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,"Hay nhap gi do!\n",-1);
   }
-}
+  gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER(g_tbf_mess),&iter);
+  mark = gtk_text_buffer_create_mark (GTK_TEXT_BUFFER(g_tbf_mess),"end",&iter,FALSE);
+  gtk_text_view_scroll_mark_onscreen (GTK_TEXT_VIEW(g_tvw_mess),mark);
+ 
+}	
 
 //khi nhan add thi hien dialog
 void on_btn_add_clicked()
@@ -173,7 +180,7 @@ char receive_buffer[MAXLINE];
 	//if (received_bytes >= strlen(receive_buffer)) break;
 	
       }
-  gtk_text_buffer_get_iter_at_offset (GTK_TEXT_BUFFER(g_tbf_mess),&iter,0);
+  gtk_text_buffer_get_end_iter (GTK_TEXT_BUFFER(g_tbf_mess),&iter);
   gtk_text_buffer_insert(GTK_TEXT_BUFFER(g_tbf_mess),&iter,strcat(bind_header("CuteBot:", receive_buffer),"\n"),-1);
   
   gtk_entry_set_text(GTK_ENTRY(g_tey_mess_add),"");
@@ -244,7 +251,9 @@ int main(int argc, char **argv)
     g_dag_add = GTK_WIDGET(gtk_builder_get_object(builder, "dag_add"));
     g_tey_mess_add = GTK_WIDGET(gtk_builder_get_object(builder, "tey_mess_add"));
     g_tey_reply_add = GTK_WIDGET(gtk_builder_get_object(builder, "tey_reply_add"));
-    
+    g_tvw_mess = GTK_WIDGET(gtk_builder_get_object(builder, "tvw_mess"));
+    gtk_text_buffer_create_tag (GTK_TEXT_BUFFER(g_tbf_mess), "color2","foreground","blue",NULL);
+    gtk_text_buffer_create_tag (GTK_TEXT_BUFFER(g_tbf_mess), "color1","foreground","brown",NULL);
     //gtk_dialog_response (Gg_dag,gint response_id);
    	
     g_object_unref(builder);
