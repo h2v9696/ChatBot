@@ -54,6 +54,7 @@ gtk_text_buffer_insert_with_tags_by_name(GTK_TEXT_BUFFER(g_tbf_mess),&iter,"Toi:
       //gtk_text_buffer_apply_tag(GTK_TEXT_BUFFER(g_tbf_mess),tag,&iter,&endline);
       strcpy(sendline,"\0");
       strcpy(sendline,mess);
+	sendline[strlen(sendline)-1] = '\0';
       gtk_entry_set_text(GTK_ENTRY(g_tey_mess),"");
       
       // Gui mess
